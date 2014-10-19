@@ -148,15 +148,18 @@ public class JdbcEventDao implements EventDao {
 		
 		//this.jdbcTemplate.update(sql_query, params, types);
 		
-		// 합쳐서 하면 안됨
+		// when빼고 합쳐서 해도 안됨
 		/*sql_query = "update events set summary=? description=? owner=? num_likes=? event_level=? where id = ?";
 		this.jdbcTemplate.update(sql_query, new Object[] {event.getSummary(),
 				event.getDescription(), event.getOwner().getId(),
 				event.getNumLikes(), event.getEventLevel().intValue(),
 				event.getId()});*/
 		
+		// Timestamp에서 update 에러 발생 고쳐야함 when=`?`도 안됨 Date로 update도 안됨
 		sql_query = "update events set when=? where id = ?";
 		this.jdbcTemplate.update(sql_query, new Object[] {timestamp, event.getId()}, new int[] {Types.TIMESTAMP, Types.INTEGER});
+		
+		// 아래는 잘됨 근데 합치면 안됨
 		sql_query = "update events set summary=? where id = ?";
 		this.jdbcTemplate.update(sql_query, new Object[] {event.getSummary(), event.getId()});
 		sql_query = "update events set description=? where id = ?";
