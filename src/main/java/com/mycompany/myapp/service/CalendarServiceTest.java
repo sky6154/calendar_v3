@@ -7,9 +7,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
+import com.mycompany.myapp.dao.EventDao;
 import com.mycompany.myapp.domain.CalendarUser;
 import com.mycompany.myapp.domain.Event;
 import com.mycompany.myapp.domain.EventAttendee;
@@ -24,10 +26,16 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="../applicationContext.xml")
-
 public class CalendarServiceTest {
 	@Autowired
 	private CalendarService calendarService;	
+	
+	@Autowired
+	private PlatformTransactionManager transactionManager;
+	
+	// 추가됨
+	@Autowired
+	private EventDao eventDao;
 
 	private CalendarUser[] calendarUsers = null;
 	private Event[] events = null;
@@ -118,9 +126,13 @@ public class CalendarServiceTest {
 	public void upgradeAllOrNothing() throws Exception{
 		CalendarService testCalendarService = new TestCalendarService(events[3].getId());
 		
+		// transactionManager가 NullPointer예외가 발생하여 수동으로 DI 해줌.
+		testCalendarService.setTransactionManager(this.transactionManager);
+		testCalendarService.setEventDao(eventDao);
+		
 		try {
 			testCalendarService.upgradeEventLevels();
-			fail("TestUserServiceException expected");
+			fail("TestCalendarServiceException expected");
 		}
 		catch(TestCalenadarServiceException e) {
 			assertThat(e, isA(TestCalenadarServiceException.class));

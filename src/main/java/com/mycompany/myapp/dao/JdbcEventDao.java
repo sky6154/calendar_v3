@@ -87,7 +87,9 @@ public class JdbcEventDao implements EventDao {
 
 				
 				// Event 파일에서 생성시 초기화를 해주거나 여기서 set 해주어야 함
-				//event.setEventLevel(EventLevel.NORMAL);
+				if (event.getEventLevel() == null) {
+					event.setEventLevel(EventLevel.NORMAL);
+				}
 				
 				Timestamp timestamp = new Timestamp(Calendar.getInstance()
 						.getTimeInMillis()); /* Updated by Assignment 3 */

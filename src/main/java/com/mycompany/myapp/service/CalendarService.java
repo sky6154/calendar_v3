@@ -2,11 +2,18 @@ package com.mycompany.myapp.service;
 
 import java.util.List;
 
+import org.springframework.transaction.PlatformTransactionManager;
+
+import com.mycompany.myapp.dao.EventDao;
 import com.mycompany.myapp.domain.CalendarUser;
 import com.mycompany.myapp.domain.Event;
 import com.mycompany.myapp.domain.EventAttendee;
 
 public interface CalendarService {
+	// 수정됨
+	public void setTransactionManager(PlatformTransactionManager transactionManager);
+	public void setEventDao(EventDao eventDao);
+	
 	/* CalendarUser */
     public CalendarUser getUser(int id);
 

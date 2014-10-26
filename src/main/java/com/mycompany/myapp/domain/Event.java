@@ -13,9 +13,9 @@ public class Event {
 
     
     //여기에서 초기화를 해주거나 JdbcEventDao에서 최초 Event 생성 시 setter로 EventLevel.NORMAL로 초기화 해 주어야 함
-    public Event(){
+    /*public Event(){
     	eventLevel = EventLevel.NORMAL;
-    }
+    }*/
 
     /* Updated by Assignment 3 - Start */
     public int getNumLikes() {

@@ -1,6 +1,12 @@
 package com.mycompany.myapp.service;
 
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -27,6 +33,7 @@ public class DefaultCalendarService implements CalendarService {
 	@Autowired
 	private CalendarUserDao userDao;
 
+	// 수정됨
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 
@@ -34,6 +41,17 @@ public class DefaultCalendarService implements CalendarService {
 	private EventAttendeeDao eventAttendeeDao;
 
 	private static final int numberOfUpgrade = 10;
+
+	// 추가됨
+	public void setTransactionManager(
+			PlatformTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
+	}
+	
+	// 추가됨
+	public void setEventDao(EventDao eventDao){
+		this.eventDao = eventDao;
+	}
 
 	/* CalendarUser */
 	@Override
@@ -138,7 +156,8 @@ public class DefaultCalendarService implements CalendarService {
 	public void upgradeEventLevels() throws Exception {
 		// TODO Assignment 3
 		// 트랜잭션 관련 코딩 필요함
-		
+
+		// 상속받은 객체에서 transactionManger가 NullPointer예외 발생
 		TransactionStatus status = this.transactionManager
 				.getTransaction(new DefaultTransactionDefinition());
 
@@ -153,6 +172,7 @@ public class DefaultCalendarService implements CalendarService {
 			this.transactionManager.rollback(status);
 			throw e;
 		}
+
 	}
 
 	@Override
