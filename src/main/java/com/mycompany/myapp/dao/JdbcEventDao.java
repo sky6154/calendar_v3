@@ -85,6 +85,10 @@ public class JdbcEventDao implements EventDao {
 								"insert into events(`when`, summary, description, owner, num_likes, event_level) values(?,?,?,?,?,?)",
 								Statement.RETURN_GENERATED_KEYS);
 
+				
+				// Event 파일에서 생성시 초기화를 해주거나 여기서 set 해주어야 함
+				//event.setEventLevel(EventLevel.NORMAL);
+				
 				Timestamp timestamp = new Timestamp(Calendar.getInstance()
 						.getTimeInMillis()); /* Updated by Assignment 3 */
 				ps.setTimestamp(1, timestamp);
@@ -156,8 +160,8 @@ public class JdbcEventDao implements EventDao {
 				event.getId()});*/
 		
 		// Timestamp에서 update 에러 발생 고쳐야함 when=`?`도 안됨 Date로 update도 안됨
-		sql_query = "update events set when=? where id = ?";
-		this.jdbcTemplate.update(sql_query, new Object[] {timestamp, event.getId()}, new int[] {Types.TIMESTAMP, Types.INTEGER});
+		//sql_query = "update events set when=? where id = ?";
+		//this.jdbcTemplate.update(sql_query, new Object[] {timestamp, event.getId()}, new int[] {Types.TIMESTAMP, Types.INTEGER});
 		
 		// 아래는 잘됨 근데 합치면 안됨
 		sql_query = "update events set summary=? where id = ?";

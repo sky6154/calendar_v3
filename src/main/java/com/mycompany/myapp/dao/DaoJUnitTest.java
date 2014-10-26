@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="../applicationContext.xml")
-
 public class DaoJUnitTest {
 	@Autowired
 	private CalendarUserDao calendarUserDao;	
@@ -32,18 +31,20 @@ public class DaoJUnitTest {
 	
 	private CalendarUser[] calendarUsers = null;
 	private Event[] events = null;
-	private EventAttendee[] eventAttentees = null;
+	private EventAttendee[] eventAttendees = null;
 	
 	private Random random = new Random(System.currentTimeMillis());
 
 	private static final int numInitialNumUsers = 12;
 	private static final int numInitialNumEvents = 4;
+	private static final int numInitialNumEventAttendees = 12;
 	
 	@Before
 	public void setUp() {
 		calendarUsers = new CalendarUser[numInitialNumUsers];
 		events = new Event[numInitialNumEvents];
-		eventAttentees = new EventAttendee[numInitialNumEvents];
+		// numInitialNumEvents -> numInitialNumEventAttendees로 수정
+		eventAttendees = new EventAttendee[numInitialNumEventAttendees];
 		
 		this.calendarUserDao.deleteAll();
 		this.eventDao.deleteAll();
@@ -74,21 +75,19 @@ public class DaoJUnitTest {
 					break;
 				case 3:
 					events[i].setNumLikes(10);
-				break;
+					break;
 			}
 			events[i].setId(eventDao.createEvent(events[i]));
 		}
-
-		for (int i = 0; i < numInitialNumEvents; i++) {
-			eventAttentees[i] = new EventAttendee();
-			eventAttentees[i].setEvent(events[i]);
-			eventAttentees[i].setAttendee(calendarUsers[3 * i]);
-			eventAttentees[i].setAttendee(calendarUsers[3 * i + 1]);
-			eventAttentees[i].setAttendee(calendarUsers[3 * i + 2]);
-			eventAttentees[i].setId(eventAttendeeDao.createEventAttendee(eventAttentees[i]));
+		
+		for (int i = 0; i < numInitialNumEventAttendees; i++) {
+			eventAttendees[i] = new EventAttendee();
+			eventAttendees[i].setEvent(events[i % numInitialNumEvents]);
+			eventAttendees[i].setAttendee(calendarUsers[i]);
+			eventAttendees[i].setId(eventAttendeeDao.createEventAttendee(eventAttendees[i]));
 		}
 	}
-
+	
 	@Test
 	public void getAllUsers() {
 		// 등록된 모든 Users 개수가 numInitialNumUsers 인지 확인하는 테스트 코드  
@@ -117,9 +116,8 @@ public class DaoJUnitTest {
 	public void getAllEventAttendees() {
 		// TODO Assignment 3
 		// 각 이벤트 별로 등록된 Attendee 개수가 3인지 확인하는 테스트 코드
-		for (int i = 0; i < numInitialNumEvents; i++) {
-			assertThat(
-					this.eventAttendeeDao.findEventAttendeeByEventId(events[i].getId()).size(), is(3));
+		for(int i = 0; i < numInitialNumEvents; i++){
+			assertThat(this.eventAttendeeDao.findEventAttendeeByEventId(events[i].getId()).size(), is(3));
 		}
 	}
 }

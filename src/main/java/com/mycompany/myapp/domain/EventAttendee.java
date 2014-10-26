@@ -1,13 +1,12 @@
 package com.mycompany.myapp.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EventAttendee {
     private Integer id;
     private Event event;
-    private List<CalendarUser> attendee = new ArrayList<CalendarUser>();
-    
+    private CalendarUser attendee;
+
     public Integer getId() {
 		return id;
 	}
@@ -24,12 +23,12 @@ public class EventAttendee {
 		this.event = event;
 	}
 
-    public List<CalendarUser> getAttendee() {
+    public CalendarUser getAttendee() {
         return attendee;
     }
     
     public void setAttendee(CalendarUser attendee) {
-        this.attendee.add(attendee);
+        this.attendee = attendee;
     }
 
 	@Override

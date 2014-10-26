@@ -10,7 +10,9 @@ public class Event {
     private CalendarUser owner;
     private int numLikes;                     /* Updated by Assignment 3 */
     private EventLevel eventLevel;            /* Updated by Assignment 3 */
+
     
+    //여기에서 초기화를 해주거나 JdbcEventDao에서 최초 Event 생성 시 setter로 EventLevel.NORMAL로 초기화 해 주어야 함
     public Event(){
     	eventLevel = EventLevel.NORMAL;
     }
