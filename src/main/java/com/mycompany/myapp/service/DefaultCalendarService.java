@@ -33,7 +33,7 @@ public class DefaultCalendarService implements CalendarService {
 	@Autowired
 	private CalendarUserDao userDao;
 
-	// 수정됨
+	// Test파일의 upgradeEventLevels에서 Autowired가 필요
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 
@@ -42,18 +42,19 @@ public class DefaultCalendarService implements CalendarService {
 
 	private static final int numberOfUpgrade = 10;
 
-	// 추가됨
+	// 추가됨(Test파일의 upgradeAllOrNothing에서 필요)
 	public void setTransactionManager(
 			PlatformTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
 	}
 	
-	// 추가됨
+	// 추가됨(Test파일의 upgradeAllOrNothing에서 필요)
 	public void setEventDao(EventDao eventDao){
 		this.eventDao = eventDao;
 	}
 
 	/* CalendarUser */
+	// userDao의 메소드 이용
 	@Override
 	public CalendarUser getUser(int id) {
 		// TODO Assignment 3
@@ -85,6 +86,7 @@ public class DefaultCalendarService implements CalendarService {
 	}
 
 	/* Event */
+	// eventDao의 메소드 이용
 	@Override
 	public Event getEvent(int eventId) {
 		// TODO Assignment 3
@@ -121,6 +123,7 @@ public class DefaultCalendarService implements CalendarService {
 	}
 
 	/* EventAttendee */
+	// eventAttendeeDao의 메소드 이용
 	@Override
 	public List<EventAttendee> getEventAttendeeByEventId(int eventId) {
 		// TODO Assignment 3
@@ -156,19 +159,22 @@ public class DefaultCalendarService implements CalendarService {
 	public void upgradeEventLevels() throws Exception {
 		// TODO Assignment 3
 		// 트랜잭션 관련 코딩 필요함
-
-		// 상속받은 객체에서 transactionManger가 NullPointer예외 발생
+		
+		// 트랜잭션 시작
 		TransactionStatus status = this.transactionManager
 				.getTransaction(new DefaultTransactionDefinition());
 
 		try {
 			List<Event> events = eventDao.findAllEvents();
+			// Event마다 업데이트가 가능하면 업데이트
 			for (Event event : events) {
 				if (canUpgradeEventLevel(event))
 					upgradeEventLevel(event);
 			}
+			// 성공 시 commit
 			this.transactionManager.commit(status);
 		} catch (RuntimeException e) {
+			// 실패 시 rollback
 			this.transactionManager.rollback(status);
 			throw e;
 		}
@@ -178,6 +184,7 @@ public class DefaultCalendarService implements CalendarService {
 	@Override
 	public boolean canUpgradeEventLevel(Event event) {
 		// TODO Assignment 3
+		// 해당 Event의 좋아요 갯수가 numberOfUpgrade 이상이면 true 반환
 		return event.getNumLikes() >= numberOfUpgrade;
 	}
 

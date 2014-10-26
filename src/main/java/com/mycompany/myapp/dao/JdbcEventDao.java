@@ -85,12 +85,11 @@ public class JdbcEventDao implements EventDao {
 								"insert into events(`when`, summary, description, owner, num_likes, event_level) values(?,?,?,?,?,?)",
 								Statement.RETURN_GENERATED_KEYS);
 
-				
 				// Event 파일에서 생성시 초기화를 해주거나 여기서 set 해주어야 함
 				if (event.getEventLevel() == null) {
 					event.setEventLevel(EventLevel.NORMAL);
 				}
-				
+
 				Timestamp timestamp = new Timestamp(Calendar.getInstance()
 						.getTimeInMillis()); /* Updated by Assignment 3 */
 				ps.setTimestamp(1, timestamp);
@@ -141,67 +140,14 @@ public class JdbcEventDao implements EventDao {
 	public void updateEvent(final Event event) {
 		// TODO Assignment 3
 		// 인자로 받은 이벤트가 지닌 각 필드 값으로 해당 이벤트 DB 테이블 내 칼럼을 업데이트 한다.
-		String sql_query = "update events set when=? summary=? description=? owner=? num_likes=? event_level=? where id = ?";
+		String sql_query = "update events set `when`=?, summary=?, description=?, owner=?, num_likes=?, event_level=? where id = ?";
 		Timestamp timestamp = new Timestamp(event.getWhen().getTimeInMillis());
 
-		Object[] params = { timestamp, event.getSummary(),
-				event.getDescription(), event.getOwner().getId(),
-				event.getNumLikes(), event.getEventLevel().intValue(),
-				event.getId() };
-
-		int[] types = { Types.TIMESTAMP, Types.VARCHAR, Types.VARCHAR,
-				Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER };
-		
-		//this.jdbcTemplate.update(sql_query, params, types);
-		
-		// when빼고 합쳐서 해도 안됨
-		/*sql_query = "update events set summary=? description=? owner=? num_likes=? event_level=? where id = ?";
-		this.jdbcTemplate.update(sql_query, new Object[] {event.getSummary(),
-				event.getDescription(), event.getOwner().getId(),
-				event.getNumLikes(), event.getEventLevel().intValue(),
-				event.getId()});*/
-		
-		// Timestamp에서 update 에러 발생 고쳐야함 when=`?`도 안됨 Date로 update도 안됨
-		//sql_query = "update events set when=? where id = ?";
-		//this.jdbcTemplate.update(sql_query, new Object[] {timestamp, event.getId()}, new int[] {Types.TIMESTAMP, Types.INTEGER});
-		
-		// 아래는 잘됨 근데 합치면 안됨
-		sql_query = "update events set summary=? where id = ?";
-		this.jdbcTemplate.update(sql_query, new Object[] {event.getSummary(), event.getId()});
-		sql_query = "update events set description=? where id = ?";
-		this.jdbcTemplate.update(sql_query, new Object[] {event.getDescription(), event.getId()});
-		sql_query = "update events set owner=? where id = ?";
-		this.jdbcTemplate.update(sql_query, new Object[] {event.getOwner().getId(), event.getId()});
-		sql_query = "update events set num_likes=? where id = ?";
-		this.jdbcTemplate.update(sql_query, new Object[] {event.getNumLikes(), event.getId()});
-		sql_query = "update events set event_level=? where id = ?";
-		this.jdbcTemplate.update(sql_query, new Object[] {event.getEventLevel().intValue(), event.getId()});
-
-		/*
-		 * this.jdbcTemplate.update( sql_query, new Object[] { timestamp,
-		 * event.getSummary(), event.getDescription(), event.getOwner().getId(),
-		 * event.getNumLikes(), event.getEventLevel().intValue(), event.getId()
-		 * }, new int[] {Types.TIMESTAMP, Types.VARCHAR, Types.VARCHAR,
-		 * Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER});
-		 */
-
-		/*
-		 * this.jdbcTemplate.update(new PreparedStatementCreator() {
-		 * 
-		 * @Override public PreparedStatement createPreparedStatement(
-		 * Connection connection) throws SQLException { PreparedStatement ps =
-		 * connection .prepareStatement(
-		 * "update events set when=? summary=? description=? owner=? num_likes=? event_level=? where id = ?"
-		 * );
-		 * 
-		 * Timestamp timestamp = new Timestamp(event.getWhen()
-		 * .getTimeInMillis()); ps.setTimestamp(1, timestamp); ps.setString(2,
-		 * event.getSummary()); ps.setString(3, event.getDescription());
-		 * ps.setInt(4, event.getOwner().getId()); ps.setInt(5,
-		 * event.getNumLikes()); ps.setInt(6, event.getEventLevel().intValue());
-		 * ps.setInt(7, event.getId());
-		 * 
-		 * return ps; } });
-		 */
+		this.jdbcTemplate.update(sql_query,
+				new Object[] { timestamp, event.getSummary(),
+						event.getDescription(), event.getOwner().getId(),
+						event.getNumLikes(), event.getEventLevel().intValue(),
+						event.getId() }
+		);
 	}
 }

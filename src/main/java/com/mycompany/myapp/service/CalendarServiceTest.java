@@ -30,6 +30,7 @@ public class CalendarServiceTest {
 	@Autowired
 	private CalendarService calendarService;	
 	
+	// 추가됨
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 	
@@ -89,6 +90,7 @@ public class CalendarServiceTest {
 		for (int i = 0; i < numInitialNumEvents; i++) {
 			eventAttentees[i] = new EventAttendee();
 			eventAttentees[i].setEvent(events[i]);
+			// ???
 			eventAttentees[i].setAttendee(calendarUsers[3 * i ]);
 			eventAttentees[i].setAttendee(calendarUsers[3 * i + 1]);
 			eventAttentees[i].setAttendee(calendarUsers[3 * i + 2]);
@@ -128,6 +130,7 @@ public class CalendarServiceTest {
 		
 		// transactionManager가 NullPointer예외가 발생하여 수동으로 DI 해줌.
 		testCalendarService.setTransactionManager(this.transactionManager);
+		// eventDao도 NullPointer예외 발생 autowired는 DI가 안되는듯함.
 		testCalendarService.setEventDao(eventDao);
 		
 		try {

@@ -41,6 +41,7 @@ public class JdbcEventAttendeeDao implements EventAttendeeDao {
 				EventAttendee eventAttendeeList = new EventAttendee();
 
 				/* TODO Assignment 3 */
+				// EventAttendee객체 값 설정
 				eventAttendeeList.setAttendee(calendarUserDao.findUser(rs
 						.getInt("attendee")));
 				eventAttendeeList.setEvent(eventDao.findEvent(rs
@@ -60,6 +61,7 @@ public class JdbcEventAttendeeDao implements EventAttendeeDao {
 	@Override
 	public List<EventAttendee> findEventAttendeeByEventId(int eventId) {
 		// TODO Assignment 3
+		// 인자로 받은 eventId로 검색하여 삭제
 		String sql_query = "select * from events_attendees where event_id = ?";
 		return this.jdbcTemplate.query(sql_query, new Object[] { eventId },
 				rowMapper);
@@ -68,6 +70,7 @@ public class JdbcEventAttendeeDao implements EventAttendeeDao {
 	@Override
 	public List<EventAttendee> findEventAttendeeByAttendeeId(int attendeeId) {
 		// TODO Assignment 3
+		// 인자로 받은 attnedeeId로 검색
 		String sql_query = "select * from events_attendees where attendee = ?";
 		return this.jdbcTemplate.query(sql_query, new Object[] { attendeeId },
 				rowMapper);
@@ -76,6 +79,7 @@ public class JdbcEventAttendeeDao implements EventAttendeeDao {
 	@Override
 	public int createEventAttendee(final EventAttendee eventAttendee) {
 		// TODO Assignment 3
+		// createEvent와 같은 방식으로 EventAttendee를 DB에 생성
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -97,6 +101,7 @@ public class JdbcEventAttendeeDao implements EventAttendeeDao {
 	@Override
 	public void deleteEventAttendee(int id) {
 		// TODO Assignment 3
+		// 인자로 받은 id로 attnedee를 검색하여 삭제
 		String sql_query = "delete from events_attendees where id = ?";
 		this.jdbcTemplate.update(sql_query, new Object[] { id });
 	}
@@ -104,6 +109,7 @@ public class JdbcEventAttendeeDao implements EventAttendeeDao {
 	@Override
 	public void deleteAll() {
 		// TODO Assignment 3
+		// 모두 삭제
 		String sql_query = "delete from events_attendees";
 		this.jdbcTemplate.update(sql_query);
 	}
